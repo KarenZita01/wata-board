@@ -272,7 +272,7 @@ export async function generateReceiptPDF(
   doc.setFillColor(255, 255, 255, 0.15);
   doc.roundedRect(PAGE_W - MARGIN - 30, y - 6, 30, 10, 2, 2, "F");
   const badgeTextColor = receipt.meterType === "water" ? [207, 250, 254] as const : [254, 243, 199] as const;
-  doc.setTextColor(...badgeTextColor);
+  doc.setTextColor(badgeTextColor[0], badgeTextColor[1], badgeTextColor[2]);
   doc.setFontSize(8);
   doc.setFont("helvetica", "bold");
   doc.text(badgeLabel, PAGE_W - MARGIN - 15, y - 0.5, { align: "center" });
@@ -326,7 +326,7 @@ export async function generateReceiptPDF(
   doc.setTextColor(...COLORS.dark);
   doc.setFontSize(20);
   doc.setFont("helvetica", "bold");
-  doc.text(formatXLM(receipt.totalAmount), MARGIN + 10, y + 21);
+  doc.text(formatXLM(String(receipt.totalAmount)), MARGIN + 10, y + 21);
 
   if (receipt.amountFiat && receipt.fiatCurrency) {
     doc.setTextColor(...COLORS.light);
@@ -382,11 +382,11 @@ export async function generateReceiptPDF(
   y += 14;
   sectionHeader("Amount Breakdown", y);
   y += 10;
-  tableRow("Bill Amount", formatXLM(receipt.amountPaid), y, true);
+  tableRow("Bill Amount", formatXLM(String(receipt.amountPaid)), y, true);
   y += 7.5;
   tableRow(
     "Service Fee",
-    receipt.serviceFee !== undefined ? formatXLM(receipt.serviceFee) : "0.0000000 XLM",
+    receipt.serviceFee !== undefined ? formatXLM(String(receipt.serviceFee)) : "0.0000000 XLM",
     y
   );
 
@@ -402,7 +402,7 @@ export async function generateReceiptPDF(
   doc.setFontSize(10);
   doc.setFont("helvetica", "bold");
   doc.text("TOTAL", MARGIN + 5, y + 7);
-  doc.text(formatXLM(receipt.totalAmount), PAGE_W - MARGIN - 4, y + 7, { align: "right" });
+  doc.text(formatXLM(String(receipt.totalAmount)), PAGE_W - MARGIN - 4, y + 7, { align: "right" });
 
   y += 20;
   doc.setFillColor(...COLORS.muted);

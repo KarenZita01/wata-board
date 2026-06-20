@@ -6,20 +6,21 @@
 import React from 'react';
 import { 
   PaymentRequest as SharedPaymentRequest, 
+} from '../../../shared/types';
+
+export type { 
   PaymentResponse, 
   RateLimitStatus, 
   PaymentInfo, 
   HealthStatus 
 } from '../../../shared/types';
 
-// Legacy interface for backward compatibility - deprecated
 export interface PaymentRequest {
   meter_id: string;
   amount: number;
   userId: string;
 }
 
-// Helper function to convert legacy PaymentRequest to standardized format
 function convertToStandardRequest(legacyRequest: PaymentRequest): SharedPaymentRequest {
   return {
     meterId: legacyRequest.meter_id,
@@ -29,7 +30,6 @@ function convertToStandardRequest(legacyRequest: PaymentRequest): SharedPaymentR
   };
 }
 
-// Helper function to convert standardized request to legacy format for API calls
 function convertToLegacyRequest(standardRequest: SharedPaymentRequest): PaymentRequest {
   return {
     meter_id: standardRequest.meterId,
@@ -37,14 +37,6 @@ function convertToLegacyRequest(standardRequest: SharedPaymentRequest): PaymentR
     userId: standardRequest.userId
   };
 }
-
-// Re-export standardized types for backward compatibility
-export type { 
-  PaymentResponse, 
-  RateLimitStatus, 
-  PaymentInfo, 
-  HealthStatus 
-} from '../../../shared/types';
 
 class ApiService {
   private baseURL: string;

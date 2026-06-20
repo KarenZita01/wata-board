@@ -265,10 +265,10 @@ class MigrationService {
   }
 
   private async decryptData(encryptedData: EncryptedMigrationData, password: string): Promise<string> {
-    const salt = this.base64ToBytes(encryptedData.salt) as Uint8Array;
-    const iv = this.base64ToBytes(encryptedData.iv) as Uint8Array;
-    const authTag = this.base64ToBytes(encryptedData.authTag) as Uint8Array;
-    const ciphertext = this.base64ToBytes(encryptedData.encryptedData) as Uint8Array;
+    const salt = this.base64ToBytes(encryptedData.salt);
+    const iv = this.base64ToBytes(encryptedData.iv);
+    const authTag = this.base64ToBytes(encryptedData.authTag);
+    const ciphertext = this.base64ToBytes(encryptedData.encryptedData);
 
     // Derive key from password
     const key = await this.deriveKey(salt, password);
@@ -278,7 +278,7 @@ class MigrationService {
 
     // Decrypt data
     const decrypted = await crypto.subtle.decrypt(
-      { name: 'AES-GCM', iv: iv as Uint8Array },
+      { name: 'AES-GCM', iv },
       key,
       encrypted
     );
@@ -298,7 +298,7 @@ class MigrationService {
     const derivedBits = await crypto.subtle.deriveBits(
       {
         name: 'PBKDF2',
-        salt: salt as Uint8Array,
+        salt,
         iterations: 100000,
         hash: 'SHA-256'
       },
@@ -337,7 +337,7 @@ class MigrationService {
     for (let i = 0; i < binaryString.length; i++) {
       bytes[i] = binaryString.charCodeAt(i);
     }
-    return bytes;
+    return new Uint8Array(bytes.buffer);
   }
 
   private generateRecoveryPhrase(): string {
